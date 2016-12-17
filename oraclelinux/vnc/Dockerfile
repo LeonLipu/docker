@@ -40,7 +40,20 @@ alias chgrp='chgrp --preserve-root'\n\
 " > /root/.bashrc
 
 RUN yum install -y --setopt=tsflags=nodocs \
-        xorg-x11-fonts-* xorg-x11-server-utils xorg-x11-server-Xvfb \
+        xorg-x11-server-utils xorg-x11-server-Xvfb \
+        xorg-x11-fonts-* \
+        gnu-free-fonts-common \
+        gnu-free-mono-fonts \
+        gnu-free-sans-fonts \
+        gnu-free-serif-fonts \
+        google-noto-fonts-common \ 
+        google-noto-sans-ui-fonts \
+        google-noto-serif-fonts \
+        google-noto-sans-fonts \
+        dejavu-fonts-common \
+        dejavu-sans-fonts \
+        dejavu-sans-mono-fonts \
+        dejavu-serif-fonts \
         xterm \
         gnome-session \
         tigervnc-server && \
