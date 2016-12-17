@@ -9,6 +9,12 @@ ARG jdktarfilename=jdk-8u111-linux-x64.tar.gz
 ARG jdkdownloadurl=http://download.oracle.com/otn-pub/java/jdk/8u111-b14/${jdktarfilename}
 ARG jdkdirname=jdk1.8.0_111
 
+RUN yum clean all && \
+    yum update -y && \
+    yum install -y --setopt=tsflags=nodocs \
+        wget && \
+        yum clean all && rm -rf /var/cache/yum/*
+
 RUN wget --no-cookies --no-check-certificate \
          --header "Cookie: gpw_e24=http%3A%2F%2Fwww.oracle.com%2F; oraclelicense=accept-securebackup-cookie" \
          --directory-prefix=/opt/ \
