@@ -1,6 +1,9 @@
 FROM saaadel/oraclelinux-vnc
 MAINTAINER saaadel
 
+# TODO replace wget with curl
+# TODO add windows manager
+
 USER root
 ENV DISPLAY=""
 WORKDIR ${HOME}
