@@ -32,6 +32,11 @@ PATH=$PATH:/opt/${jdkdirname}/bin:/opt/${jdkdirname}/jre/bin\n\
     /usr/bin/cat /root/.profile.java.template >> /etc/environment && \
     /usr/bin/cat /root/.profile.java.template >> /root/.profile
 
+ENV JAVA_HOME=/opt/${jdkdirname} \
+    JDK_HOME=/opt/${jdkdirname} \
+    JRE_HOME=/opt/${jdkdirname} \
+    PATH=$PATH:/opt/${jdkdirname}/bin:/opt/${jdkdirname}/jre/bin
+
 RUN chown -R root:root ${HOME}
 CMD ["java", "-version"]
 
