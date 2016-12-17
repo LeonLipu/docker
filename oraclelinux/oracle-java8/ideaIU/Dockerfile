@@ -2,7 +2,7 @@ FROM saaadel/oraclelinux-vnc
 MAINTAINER saaadel
 
 USER root
-ENV DISPLAY="" \
+ENV DISPLAY=""
 WORKDIR ${HOME}
 
 ARG jdktarfilename=jdk-8u111-linux-x64.tar.gz
@@ -15,7 +15,8 @@ ARG ideaurl=https://download.jetbrains.com/idea/${ideatarfilename}
 ARG ideadirname=idea-IU-163.9166.29
 
 RUN yum install -y --setopt=tsflags=nodocs \
-        wget && \
+        wget \
+        which && \
         yum clean all && rm -rf /var/cache/yum/*
 
 RUN wget --no-cookies --no-check-certificate \
