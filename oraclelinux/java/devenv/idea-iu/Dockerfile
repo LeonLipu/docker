@@ -9,7 +9,7 @@ ARG ideadirname=idea-IU-163.9166.29
 
 RUN rm -rf /tmp/ideaIU.tmp && \
     curl -jkL -o /tmp/ideaIU.tmp \
-         "${mavenurl}" && \
+         "${ideaurl}" && \
     tar xzf /tmp/ideaIU.tmp -C /opt && \
     rm -rf /tmp/ideaIU.tmp && \
 
