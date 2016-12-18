@@ -1,4 +1,4 @@
-FROM saaadel/oraclelinux
+FROM saaadel/oraclelinux-bash
 MAINTAINER saaadel
 
 # Java tar.gz URL and folder name inside
