@@ -44,5 +44,5 @@ RUN yum clean all && \
         yum clean all && rm -rf /var/cache/yum/*
 
 CMD ["bash", "--version"]
-ENTRYPOINT ["chroot", "--userspec=nobody"]
+ENTRYPOINT ["chroot", "--userspec=nobody", "/"]
 
