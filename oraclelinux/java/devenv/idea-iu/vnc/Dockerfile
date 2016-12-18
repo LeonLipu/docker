@@ -69,4 +69,5 @@ RUN chown -R ${uid}:${gid} ${HOME} && \
 EXPOSE 5901
 LABEL io.openshift.expose-services="5901:tcp"
 USER ${user}
+CMD []
 ENTRYPOINT ["/usr/bin/vncserver","-fg"]
