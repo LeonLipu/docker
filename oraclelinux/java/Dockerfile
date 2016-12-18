@@ -4,8 +4,8 @@ FROM saaadel/oraclelinux-bash
 MAINTAINER saaadel
 
 # Java tar.gz URL and folder name inside
-ARG javaurl=http://download.oracle.com/otn-pub/java/jdk/7u80-b15/jre-7u80-linux-x64.tar.gz
-ARG javadirname=jre1.7.0_80
+ARG javaurl=http://download.oracle.com/otn-pub/java/jdk/8u112-b15/jre-8u112-linux-x64.tar.gz
+ARG javadirname=jre1.8.0_112
 
 # Download and set up as default (no pipe for tar, because curl follows redirects)
 RUN rm -rf /tmp/curl.tmp && \
