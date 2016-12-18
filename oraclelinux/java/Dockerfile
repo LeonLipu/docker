@@ -10,7 +10,7 @@ ARG javadirname=jre1.7.0_80
 # Download and set up as default (no pipe for tar, because curl follows redirects)
 RUN rm -rf /tmp/curl.tmp && \
     curl -o /tmp/curl.tmp \
-    -H "Cookie: gpw_e24=http%3A%2F%2Fwww.oracle.com%2Ftechnetwork%2Fjava%2Fjavase%2Fdownloads%2Fjava-archive-downloads-javase7-521261.html; oraclelicense=accept-securebackup-cookie" \
+    -H "Cookie: gpw_e24=http%3A%2F%2Fwww.oracle.com%2Ftechnetwork%2Fjava%2Fjavase%2Fdownloads%2Fjava-archive-downloads-javase7-521261.html%23sjre-7u80-oth-JPR; oraclelicense=accept-securebackup-cookie" \
     -k -L "${javaurl}" && \
     tar xzf /tmp/curl.tmp -C /opt && \
     rm -rf /tmp/curl.tmp && \
