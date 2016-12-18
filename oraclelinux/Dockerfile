@@ -6,7 +6,7 @@ MAINTAINER saaadel
 SHELL ["bash", "-c"]
 #USER root
 #ENV HOME=/root
-WORKDIR ${HOME}
+WORKDIR /tmp
 
 # Load ~/.profile in bash for environment variables (PATH and etc.)
 RUN sed -i 's/# \.bash_profile/# \.bash_profile\nif [ -f ~\/.profile ]; then\n        . ~\/.profile\nfi\n/' /root/.bash_profile && \
