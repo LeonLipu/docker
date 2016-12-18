@@ -6,9 +6,12 @@ ARG javaurl=http://download.oracle.com/otn/java/jdk/7u80-b15/jre-7u80-linux-x64.
 ARG javadirname=jre1.7.0_80
 
 # Download and set up as default
-RUN curl \
+RUN rm -rf /tmp/curl.tmp && \
+    curl -o /tmp/curl.tmp \
     -H "Cookie: gpw_e24=http%3A%2F%2Fwww.oracle.com%2F; oraclelicense=accept-securebackup-cookie" \
-    -k -L "${javaurl}" | tar xzf - -C /opt && \
+    -k -L "${javaurl}" && \
+    tar xzf /tmp/curl.tmp  -C /opt && \
+    rm -rf /tmp/curl.tmp && \
     /usr/sbin/alternatives --install /usr/bin/java java /opt/${javadirname}/bin/java 2 && \
     /usr/sbin/alternatives --install /usr/bin/jar jar /opt/${javadirname}/bin/jar 2 && \
     /usr/sbin/alternatives --install /usr/bin/javac javac /opt/${javadirname}/bin/javac 2 && \
