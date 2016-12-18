@@ -19,16 +19,16 @@ RUN curl --silent --location "${nodejsurl}" | bash - && \
         nodejs npm && \
         yum clean all && rm -rf /var/cache/yum/* && \
     npm install -g bower grunt-cli gulp-cli && \
-    rm -rf /opt/maven.tmp.tar.gz && \
-    curl -jkL -o /opt/maven.tmp.tar.gz \
+    rm -rf /tmp/maven.tmp && \
+    curl -jkL -o /tmp/maven.tmp \
          "${mavenurl}" && \
-    tar xzf /opt/maven.tmp.tar.gz -C /opt && \
-    rm -rf /opt/maven.tmp.tar.gz && \
-    rm -rf /opt/gradle.tmp.zip && \
-    curl -jkL -o /opt/gradle.tmp.zip \
+    tar xzf /tmp/maven.tmp -C /opt && \
+    rm -rf /tmp/maven.tmp && \
+    rm -rf /tmp/gradle.tmp && \
+    curl -jkL -o /tmp/gradle.tmp \
          "${gradleurl}" && \
-    unzip /opt/gradle.tmp.zip -d /opt && \
-    rm -rf /opt/gradle.tmp.zip && \
+    unzip /tmp/gradle.tmp -d /opt && \
+    rm -rf /tmp/gradle.tmp && \
     /bin/echo -e "\n\
 M2_HOME=/opt/${mavendirname}/\n\
 GRADLE_HOME=/opt/${gradledirname}/\n\
