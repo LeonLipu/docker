@@ -11,7 +11,7 @@ ARG gid=0
 
 ARG sudoersgroup=wheel
 
-ENV DISPLAY="" \
+ENV DISPLAY=":1" \
     HOME=/home/${user}
 WORKDIR ${HOME}
 
@@ -44,15 +44,16 @@ RUN useradd -u ${uid} -r -g ${gid} -d ${HOME} -s /bin/bash ${user} && \
 
 RUN /bin/echo -e "#!/bin/sh\n\
 # Uncomment the following two lines for normal desktop:\n\
-# unset SESSION_MANAGER\n\
-# unset DBUS_SESSION_BUS_ADDRESS\n\
-# exec /etc/X11/xinit/xinitrc\n\
+unset SESSION_MANAGER\n\
+unset DBUS_SESSION_BUS_ADDRESS\n\
+exec /etc/X11/xinit/xinitrc\n\
 [ -x /etc/vnc/xstartup ] && exec /etc/vnc/xstartup\n\
 [ -r $HOME/.Xresources ] && xrdb $HOME/.Xresources\n\
 xsetroot -solid grey\n\
 vncconfig -iconic &\n\
 xterm -geometry 80x24+10+10 -ls -title "$VNCDESKTOP Desktop" &\n\
 twm &\n\
+exec gnome-session\n\
 " >> ${HOME}/.vnc/xstartup && \
     /bin/echo "/opt/${ideadirname}/bin/idea.sh" >> ${HOME}/.vnc/xstartup
 
