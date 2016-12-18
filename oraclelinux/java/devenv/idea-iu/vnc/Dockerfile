@@ -1,6 +1,6 @@
 # saaadel/oraclelinux-idea-ui-vnc
 
-FROM saaadel/oraclelinux-idea-ui
+FROM saaadel/oraclelinux-idea-iu
 MAINTAINER saaadel
 
 ARG vncpassword=
