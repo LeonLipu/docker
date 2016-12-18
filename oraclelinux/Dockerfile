@@ -4,8 +4,8 @@ FROM oraclelinux
 MAINTAINER saaadel
 
 SHELL ["bash", "-c"]
-USER root
-ENV HOME=/root
+#USER root
+#ENV HOME=/root
 WORKDIR ${HOME}
 
 # Load ~/.profile in bash for environment variables (PATH and etc.)
@@ -44,4 +44,5 @@ RUN yum clean all && \
         yum clean all && rm -rf /var/cache/yum/*
 
 CMD ["bash", "--version"]
+ENTRYPOINT ["chroot", "--userspec=nobody"]
 
