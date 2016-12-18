@@ -54,6 +54,7 @@ vncconfig -iconic &\n\
 xterm -geometry 80x24+10+10 -ls -title "$VNCDESKTOP Desktop" &\n\
 twm &\n\
 exec gnome-session\n\
+xterm
 " >> ${HOME}/.vnc/xstartup && \
     /bin/echo "/opt/${ideadirname}/bin/idea.sh" >> ${HOME}/.vnc/xstartup
 
@@ -71,4 +72,4 @@ EXPOSE 5901
 LABEL io.openshift.expose-services="5901:tcp"
 USER ${user}
 CMD []
-ENTRYPOINT ["/usr/bin/vncserver"]
+ENTRYPOINT ["/usr/bin/vncserver", "-fg"]
