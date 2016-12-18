@@ -11,6 +11,6 @@ RUN rm -rf /tmp/ideaIU.tmp && \
     curl -jkL -o /tmp/ideaIU.tmp \
          "${ideaurl}" && \
     tar xzf /tmp/ideaIU.tmp -C /opt && \
-    rm -rf /tmp/ideaIU.tmp && \
+    rm -rf /tmp/ideaIU.tmp
 
 CMD /opt/${ideadirname}/bin/idea.sh
