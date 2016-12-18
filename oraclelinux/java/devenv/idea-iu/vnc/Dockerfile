@@ -44,14 +44,14 @@ RUN useradd -u ${uid} -r -g ${gid} -d ${HOME} -s /bin/bash ${user} && \
 
 RUN /bin/echo -e "#!/bin/sh\n\
 # Uncomment the following two lines for normal desktop:\n\
-# unset SESSION_MANAGER\n\
-# exec /etc/X11/xinit/xinitrc\n\
+unset SESSION_MANAGER\n\
+exec /etc/X11/xinit/xinitrc\n\
 [ -x /etc/vnc/xstartup ] && exec /etc/vnc/xstartup\n\
 [ -r \$HOME/.Xresources ] && xrdb \$HOME/.Xresources\n\
-#xsetroot -solid grey\n\
-#vncconfig -iconic &\n\
-#xterm -geometry 80x24+10+10 -ls -title \"\$VNCDESKTOP Desktop\" &\n\
-#twm &\n\
+xsetroot -solid grey\n\
+vncconfig -iconic &\n\
+xterm -geometry 80x24+10+10 -ls -title \"\$VNCDESKTOP Desktop\" &\n\
+twm &\n\
 if test -z \"\$DBUS_SESSION_BUS_ADDRESS\" ; then\n\
 	eval `dbus-launch --sh-syntax –exit-with-session`\n\
 	echo \"D-BUS per-session daemon address is: \$DBUS_SESSION_BUS_ADDRESS\"\n\
@@ -64,7 +64,11 @@ RUN /bin/echo "${vncpassword}" | vncpasswd -f > ${HOME}/.vnc/passwd
 
 RUN chown -R ${uid}:${gid} ${HOME} && \
     chmod 600 ${HOME}/.vnc/passwd && \
-    chmod 775 ${HOME}/.vnc/xstartup
+    chmod 775 ${HOME}/.vnc/xstartup && \
+    mkdir /mnt/external-dir && \
+    chmod 777 /mnt/external-dir
+
+VOLUME /mnt/external-dir
 
 EXPOSE 5901
 LABEL io.openshift.expose-services="5901:tcp"
