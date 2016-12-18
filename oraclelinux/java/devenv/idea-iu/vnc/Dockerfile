@@ -16,7 +16,7 @@ ENV DISPLAY="" \
 WORKDIR ${HOME}
 
 RUN yum install -y --setopt=tsflags=nodocs \
-        xorg-x11-server-utils xorg-x11-server-Xvfb \
+        xorg-x11-server-utils xorg-x11-server-Xorg \
         xorg-x11-fonts-* \
         gnu-free-fonts-common \
         gnu-free-mono-fonts \
@@ -44,19 +44,15 @@ RUN useradd -u ${uid} -r -g ${gid} -d ${HOME} -s /bin/bash ${user} && \
 
 RUN /bin/echo -e "#!/bin/sh\n\
 # Uncomment the following two lines for normal desktop:\n\
-unset SESSION_MANAGER\n\
-exec /etc/X11/xinit/xinitrc\n\
+# unset SESSION_MANAGER\n\
+# unset DBUS_SESSION_BUS_ADDRESS\n\
+# exec /etc/X11/xinit/xinitrc\n\
 [ -x /etc/vnc/xstartup ] && exec /etc/vnc/xstartup\n\
-[ -r \$HOME/.Xresources ] && xrdb \$HOME/.Xresources\n\
+[ -r $HOME/.Xresources ] && xrdb $HOME/.Xresources\n\
 xsetroot -solid grey\n\
 vncconfig -iconic &\n\
-xterm -geometry 80x24+10+10 -ls -title \"\$VNCDESKTOP Desktop\" &\n\
+xterm -geometry 80x24+10+10 -ls -title "$VNCDESKTOP Desktop" &\n\
 twm &\n\
-if test -z \"\$DBUS_SESSION_BUS_ADDRESS\" ; then\n\
-	eval `dbus-launch --sh-syntax –exit-with-session`\n\
-	echo \"D-BUS per-session daemon address is: \$DBUS_SESSION_BUS_ADDRESS\"\n\
-fi\n\
-exec  gnome-session\n\
 " >> ${HOME}/.vnc/xstartup && \
     /bin/echo "/opt/${ideadirname}/bin/idea.sh" >> ${HOME}/.vnc/xstartup
 
@@ -74,4 +70,4 @@ EXPOSE 5901
 LABEL io.openshift.expose-services="5901:tcp"
 USER ${user}
 CMD []
-ENTRYPOINT ["/usr/bin/vncserver","-fg"]
+ENTRYPOINT ["/usr/bin/vncserver"]
