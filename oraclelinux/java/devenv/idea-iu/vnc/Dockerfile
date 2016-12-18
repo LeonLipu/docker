@@ -1,0 +1,72 @@
+# saaadel/oraclelinux-idea-ui-vnc
+
+FROM saaadel/oraclelinux-idea-ui
+MAINTAINER saaadel
+
+ARG vncpassword=
+
+ARG user=user
+ARG uid=1001
+ARG gid=0
+
+ARG sudoersgroup=wheel
+
+ENV DISPLAY="" \
+    HOME=/home/${user}
+WORKDIR ${HOME}
+
+RUN yum install -y --setopt=tsflags=nodocs \
+        xorg-x11-server-utils xorg-x11-server-Xvfb \
+        xorg-x11-fonts-* \
+        gnu-free-fonts-common \
+        gnu-free-mono-fonts \
+        gnu-free-sans-fonts \
+        gnu-free-serif-fonts \
+        google-noto-fonts-common \
+        google-noto-sans-ui-fonts \
+        google-noto-serif-fonts \
+        google-noto-sans-fonts \
+        dejavu-fonts-common \
+        dejavu-sans-fonts \
+        dejavu-sans-mono-fonts \
+        dejavu-serif-fonts \
+        xterm \
+        gnome-session \
+        tigervnc-server && \
+        yum clean all && rm -rf /var/cache/yum/*
+
+RUN /bin/dbus-uuidgen --ensure
+
+RUN useradd -u ${uid} -r -g ${gid} -d ${HOME} -s /bin/bash ${user} && \
+    passwd -d ${user} && \
+    usermod -a -G ${sudoersgroup} ${user} && \
+    [ ! -d ${HOME}/.vnc ] && mkdir -p ${HOME}/.vnc
+
+RUN /bin/echo -e "#!/bin/sh\n\
+# Uncomment the following two lines for normal desktop:\n\
+# unset SESSION_MANAGER\n\
+# exec /etc/X11/xinit/xinitrc\n\
+[ -x /etc/vnc/xstartup ] && exec /etc/vnc/xstartup\n\
+[ -r \$HOME/.Xresources ] && xrdb \$HOME/.Xresources\n\
+#xsetroot -solid grey\n\
+#vncconfig -iconic &\n\
+#xterm -geometry 80x24+10+10 -ls -title \"\$VNCDESKTOP Desktop\" &\n\
+#twm &\n\
+if test -z \"\$DBUS_SESSION_BUS_ADDRESS\" ; then\n\
+	eval `dbus-launch --sh-syntax –exit-with-session`\n\
+	echo \"D-BUS per-session daemon address is: \$DBUS_SESSION_BUS_ADDRESS\"\n\
+fi\n\
+exec  gnome-session\n\
+" >> ${HOME}/.vnc/xstartup && \
+    /bin/echo "/opt/${ideadirname}/bin/idea.sh" >> ${HOME}/.vnc/xstartup
+
+RUN /bin/echo "${vncpassword}" | vncpasswd -f > ${HOME}/.vnc/passwd
+
+RUN chown -R ${uid}:${gid} ${HOME} && \
+    chmod 600 ${HOME}/.vnc/passwd && \
+    chmod 775 ${HOME}/.vnc/xstartup
+
+EXPOSE 5901
+LABEL io.openshift.expose-services="5901:tcp"
+USER ${user}
+ENTRYPOINT ["/usr/bin/vncserver","-fg"]
