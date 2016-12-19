@@ -4,6 +4,7 @@ FROM saaadel/oraclelinux-idea-iu
 MAINTAINER saaadel
 
 ARG vncpassword=
+ARG ideadirname=idea-IU-163.9166.29
 
 ARG user=user
 ARG uid=1001
@@ -15,25 +16,14 @@ ENV DISPLAY=":1" \
     HOME=/home/${user}
 WORKDIR ${HOME}
 
-RUN yum install -y --setopt=tsflags=nodocs \
-        xorg-x11-server-utils xorg-x11-server-Xorg \
-        xorg-x11-fonts-* \
-        gnu-free-fonts-common \
-        gnu-free-mono-fonts \
-        gnu-free-sans-fonts \
-        gnu-free-serif-fonts \
-        google-noto-fonts-common \
-        google-noto-sans-ui-fonts \
-        google-noto-serif-fonts \
-        google-noto-sans-fonts \
-        dejavu-fonts-common \
-        dejavu-sans-fonts \
-        dejavu-sans-mono-fonts \
-        dejavu-serif-fonts \
+RUN yum groupinstall -y --setopt=tsflags=nodocs \
+        "X Window System" "Fonts" && \
+    yum install -y --setopt=tsflags=nodocs \
         xterm \
-        gnome-session \
-        tigervnc-server && \
-        yum clean all && rm -rf /var/cache/yum/*
+        tigervnc-server \
+        gnome-session metacity \
+        mc && \
+    yum clean all && rm -rf /var/cache/yum/*
 
 RUN /bin/dbus-uuidgen --ensure
 
@@ -43,20 +33,31 @@ RUN useradd -u ${uid} -r -g ${gid} -d ${HOME} -s /bin/bash ${user} && \
     [ ! -d ${HOME}/.vnc ] && mkdir -p ${HOME}/.vnc
 
 RUN /bin/echo -e "#!/bin/sh\n\
-# Uncomment the following two lines for normal desktop:\n\
+\n\
+\x23 unset DBUS_SESSION_BUS_ADDRESS\n\
+\n\
+\x23 Run it before for clipboard support\n\
+[ -x  /usr/bin/vncconfig ] && /usr/bin/vncconfig -iconic &\n\
+\n\
+\x23 Uncomment the following two lines for normal desktop:\n\
 unset SESSION_MANAGER\n\
-unset DBUS_SESSION_BUS_ADDRESS\n\
-exec /etc/X11/xinit/xinitrc\n\
+\x23 exec /etc/X11/xinit/xinitrc\n\
+\n\
 [ -x /etc/vnc/xstartup ] && exec /etc/vnc/xstartup\n\
-[ -r $HOME/.Xresources ] && xrdb $HOME/.Xresources\n\
-xsetroot -solid grey\n\
-vncconfig -iconic &\n\
-xterm -geometry 80x24+10+10 -ls -title "$VNCDESKTOP Desktop" &\n\
-twm &\n\
-exec gnome-session\n\
-xterm
-" >> ${HOME}/.vnc/xstartup && \
-    /bin/echo "/opt/${ideadirname}/bin/idea.sh" >> ${HOME}/.vnc/xstartup
+[ -r \$HOME/.Xresources ] && xrdb \$HOME/.Xresources\n\
+\n\
+[ -x /usr/bin/xsetroot ] && /usr/bin/xsetroot -solid '#222E45'\n\
+[ -x /usr/bin/xclock ] && /usr/bin/xclock -geometry 100x100-5+5 &\n\
+[ -x /usr/bin/xterm ] && xterm -geometry 132x44-10-10 -ls -title \"\$VNCDESKTOP Desktop\" &\n\
+[ -x /usr/bin/metacity ] && /usr/bin/metacity &\n\
+if test -z \"\$DBUS_SESSION_BUS_ADDRESS\" ; then\n\
+	eval `dbus-launch --sh-syntax –exit-with-session`\n\
+	echo \"D-BUS per-session daemon address is: \\n\
+	\$DBUS_SESSION_BUS_ADDRESS\"\n\
+fi\n\
+/opt/${ideadirname}/bin/idea.sh &\n\
+exec sudo /usr/bin/gnome-session\n\
+" >> ${HOME}/.vnc/xstartup
 
 RUN /bin/echo "${vncpassword}" | vncpasswd -f > ${HOME}/.vnc/passwd
 
@@ -73,3 +74,4 @@ LABEL io.openshift.expose-services="5901:tcp"
 USER ${user}
 CMD []
 ENTRYPOINT ["/usr/bin/vncserver", "-fg"]
+
