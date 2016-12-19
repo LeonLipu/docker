@@ -55,7 +55,7 @@ if test -z \"\$DBUS_SESSION_BUS_ADDRESS\" ; then\n\
 	echo \"D-BUS per-session daemon address is: \\n\
 	\$DBUS_SESSION_BUS_ADDRESS\"\n\
 fi\n\
-/opt/${ideadirname}/bin/idea.sh &\n\
+sudo /opt/${ideadirname}/bin/idea.sh &\n\
 exec sudo /usr/bin/gnome-session\n\
 " >> ${HOME}/.vnc/xstartup
 
